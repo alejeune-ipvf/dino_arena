@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12141a">
+  <title>Dino Arena</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1><span class="logo">🦖</span> Dino Arena</h1>
+    <nav>
+      <button data-tab="arena" class="active">Arena</button>
+      <button data-tab="lab">Lab</button>
+      <button data-tab="roster">Roster</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ARENA ------------------------------------------------------------- -->
+    <section id="tab-arena">
+      <div id="setup" class="panel">
+        <h2>New match</h2>
+        <p class="muted">Each round: roll a d20 for your budget and a d12 for your species. Headcount is budget divided by bulk. You may reroll one die once. Then the fight resolves. Whoever holds the hill wins the round.</p>
+        <div class="row">
+          <label>Player 1 <input id="name-a" maxlength="16" placeholder="Alex"></label>
+          <label>Player 2 <input id="name-b" maxlength="16" placeholder="Mathis"></label>
+        </div>
+        <div class="row">
+          <label>First to
+            <select id="target">
+              <option value="1">1 hill</option>
+              <option value="2">2 hills</option>
+              <option value="3" selected>3 hills</option>
+              <option value="5">5 hills</option>
+            </select>
+          </label>
+          <button id="start" class="primary" data-action="start">Enter the arena</button>
+        </div>
+        <div id="ladder"></div>
+      </div>
+
+      <div id="match" hidden>
+        <div id="scoreboard" class="panel"></div>
+        <div id="players" class="players"></div>
+        <div id="status" class="status"></div>
+        <div id="fight-controls" class="center"></div>
+        <ol id="log" class="log"></ol>
+        <div id="round-controls" class="center"></div>
+      </div>
+    </section>
+
+    <!-- LAB --------------------------------------------------------------- -->
+    <section id="tab-lab" hidden>
+      <div class="panel">
+        <h2>Matchup</h2>
+        <p class="muted">Settle the debate. Pick any two armies and run a few thousand fights.</p>
+        <div class="matchup">
+          <div class="pick"><label>Army A <select id="lab-sp-a"></select></label><label>count <input id="lab-n-a" type="number" min="1" max="60" value="1"></label></div>
+          <div class="vs">vs</div>
+          <div class="pick"><label>Army B <select id="lab-sp-b"></select></label><label>count <input id="lab-n-b" type="number" min="1" max="60" value="1"></label></div>
+        </div>
+        <div class="row">
+          <button class="primary" data-action="simulate">Simulate 3000 fights</button>
+          <button data-action="watch">Watch one fight</button>
+        </div>
+        <div id="lab-result"></div>
+        <ol id="lab-log" class="log"></ol>
+      </div>
+
+      <div class="panel">
+        <h2>Who beats whom</h2>
+        <p class="muted">Row beats column, in percent. Averaged over dice rolls unless you pick another mode. The last column is the king score.</p>
+        <div class="row">
+          <label>Mode
+            <select id="hm-mode">
+              <option value="dice">Real game (d20 budgets)</option>
+              <option value="budget">Equal budget of 12</option>
+              <option value="1v1">One on one</option>
+            </select>
+          </label>
+          <button class="primary" data-action="heatmap">Compute</button>
+        </div>
+        <div id="heatmap" class="heatmap-wrap"></div>
+      </div>
+    </section>
+
+    <!-- ROSTER ------------------------------------------------------------ -->
+    <section id="tab-roster" hidden>
+      <p class="muted panel">The whole roster lives in <code>js/species.js</code>. Change a number, reload, argue.</p>
+      <div id="roster" class="roster"></div>
+    </section>
+  </main>
+
+  <script src="js/species.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
