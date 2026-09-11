@@ -95,6 +95,8 @@ const Engine = (() => {
   function fight(armyA, armyB, opts) {
     opts = opts || {};
     const rng = opts.rng || makeRng(opts.seed);
+    // Narration picks its own stream: the outcome must not depend on whether a log is kept.
+    const flavor = opts.seed == null ? Math.random : makeRng((opts.seed ^ 0x5bd1e995) >>> 0);
     const keepLog = opts.log !== false;
     const A = makeSide('A', armyA);
     const B = makeSide('B', armyB);
@@ -164,7 +166,7 @@ const Engine = (() => {
       const X = p.X, Y = p.Y;
       const nameA = nameOf(X), nameB = nameOf(Y), nameB1 = Y.sp.name, many = X.n0 > 1;
       if (p.armored) {
-        if (!X.armorNoted) { say(tick, X.key, 'armor', fmt(pick(LINES.armor, rng), { A: nameA, B: nameB, many })); X.armorNoted = true; }
+        if (!X.armorNoted) { say(tick, X.key, 'armor', fmt(pick(LINES.armor, flavor), { A: nameA, B: nameB, many })); X.armorNoted = true; }
         return;
       }
       const before = Y.n;
@@ -190,8 +192,8 @@ const Engine = (() => {
         if (kills > 0 || tags.length) {
           let text;
           if (kills === 0) text = 'The ' + nameA + (many ? ' press' : ' presses') + ' the ' + nameB + '.';
-          else if (kills === 1) text = fmt(pick(LINES.kill1, rng), ctx);
-          else text = fmt(pick(LINES.kill, rng), ctx);
+          else if (kills === 1) text = fmt(pick(LINES.kill1, flavor), ctx);
+          else text = fmt(pick(LINES.kill, flavor), ctx);
           say(tick, X.key, kills > 0 ? 'kill' : 'hit', tags.length ? text + ' ' + tags.join(' ') : text);
         }
       }
@@ -203,7 +205,7 @@ const Engine = (() => {
       if (X.routed || X.n <= 0 || X.morale >= 1) return;
       if (X.losses / X.n0 >= X.morale) {
         X.routed = true;
-        say(tick, X.key, 'rout', fmt(pick(LINES.rout, rng), { A: nameOf(X), many: X.n0 > 1 }));
+        say(tick, X.key, 'rout', fmt(pick(LINES.rout, flavor), { A: nameOf(X), many: X.n0 > 1 }));
       }
     }
     const out = (X) => X.n <= 0 || X.routed;
